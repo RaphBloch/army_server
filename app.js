@@ -94,7 +94,7 @@ io.on('connection',   async socket => {
             ADI = prompt('ADI: ');
         }
 
-        HSI  = prompt('HIS : ');
+        HSI  = prompt('HSI : ');
         while(HSI < 0 || HSI >= 360)
         {
             console.log("Please , enter a valid value of HSI (between 0 and 359)")
