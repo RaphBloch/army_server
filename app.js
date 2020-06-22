@@ -1,6 +1,6 @@
 
 
-// load the modules that you neead
+// load the modules that you need
 var express = require('express');
 var http = require('http');
 const prompt = require('prompt-sync')();
@@ -25,7 +25,7 @@ const port = 4000;
 
         //#region Data Fields
  var altitude = 0 ;
- var HIS = 0;
+ var HSI = 0;
  var ADI = 0;
 
 
@@ -34,18 +34,15 @@ const port = 4000;
 
 
 
-app.get('/',function (req,res) {
-
-    res.send(200);
-});
 
 
-            //#region   Help Functions
-/**
- * Async function that waits for a keypress to be terminated
- * @returns {Promise<*>}
- */
-const keypress = async () => {
+
+    //#region   Help Functions
+    /**
+    *   Async function that waits for a keypress to be terminated
+    * @returns {Promise<*>}
+    */
+    const keypress = async () => {
         process.stdin.setRawMode(true)
         return new Promise(resolve => process.stdin.once('data', () => {
             process.stdin.setRawMode(false)
@@ -54,16 +51,13 @@ const keypress = async () => {
     }
 ;
 
-function sleep(ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
-}
   //  #endregion
 
 
 
-// launching the server
+/*
+    Launch the server
+ */
 server.listen(port, () => {
     console.log('server is running on port', server.address().port);
 
@@ -71,6 +65,10 @@ server.listen(port, () => {
 });
 
 
+
+/*
+   When a client is connected to our socket
+ */
 io.on('connection',   async socket => {
 
     console.log("New client connected");
@@ -81,7 +79,7 @@ io.on('connection',   async socket => {
         return 1;
     }
 
-        // region Prompt the parameters
+        // region Prompt the parameters ( with checking of the entered values )
         altitude = prompt('Altitude:');
         while(altitude> 3000 || altitude < 0)
         {
@@ -96,22 +94,24 @@ io.on('connection',   async socket => {
             ADI = prompt('ADI: ');
         }
 
-        HIS  = prompt('HIS : ');
-        while(HIS < 0 || HIS >= 360)
+        HSI  = prompt('HIS : ');
+        while(HSI < 0 || HSI >= 360)
         {
-            console.log("Please , enter a valid value of HIS (between 0 and 359)")
-            HIS = prompt('HIS: ');
+            console.log("Please , enter a valid value of HSI (between 0 and 359)")
+            HSI = prompt('HSI: ');
         }
         console.log("Any Key : ");
         await keypress();
 
         //endregion
 
-        let response=[altitude,ADI,HIS];
-        console.log("Thank you for sending data ");
+
+        //array that i send in my message to the client
+        let response=[altitude,HSI,ADI];
+
         // Emitting a new  data message. Will be consumed by the client
         socket.emit("Data", response);
-
+        console.log("Thank you for sending data ");
 
 
     // disconnect is fired when a client leaves the server
